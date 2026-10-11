@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qimen Decision Chart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #e3e7e0;      /* celadon-grey ground */
+      --board: #eef1ec;      /* the chart plate */
+      --ink: #1f2623;
+      --ink-soft: #5d6762;
+      --line: #b7c0b9;
+      --cinnabar: #b5352b;   /* seal red: you */
+      --indigo: #2f4a6b;     /* the matter */
+      --jade: #3d7a5d;
+      --ochre: #9c6b1c;
+      --han: "Noto Serif SC", "Songti SC", "SimSun", serif;
+      --text: "Spectral", "Iowan Old Style", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--text);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 56px 24px 72px;
+    }
+
+    /* Masthead */
+    header {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .mark {
+      font-family: var(--han);
+      font-weight: 900;
+      font-size: 64px;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+    }
+    .mark span { color: var(--cinnabar); }
+    .masthead-text h1 {
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+    .masthead-text p {
+      color: var(--ink-soft);
+      font-size: 15px;
+      max-width: 46ch;
+    }
+
+    /* Question */
+    .ask {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 16px;
+      align-items: end;
+      margin-bottom: 40px;
+      max-width: 760px;
+    }
+    .ask label {
+      grid-column: 1 / -1;
+      font-size: 15px;
+      color: var(--ink-soft);
+    }
+    .ask input {
+      font-family: var(--text);
+      font-size: 22px;
+      color: var(--ink);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid var(--ink);
+      padding: 6px 0 8px;
+      width: 100%;
+      border-radius: 0;
+    }
+    .ask input::placeholder { color: #8d968f; font-style: italic; }
+    .ask input:focus { outline: none; border-bottom-color: var(--cinnabar); }
+    .ask button {
+      font-family: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+      background: var(--ink);
+      color: var(--board);
+      border: none;
+      padding: 12px 22px;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+    .ask button:hover { background: #333d39; }
+    .ask button:focus-visible, .ask input:focus-visible {
+      outline: 2px solid var(--cinnabar);
+      outline-offset: 3px;
+    }
+    .ask .stamp-time {
+      grid-column: 1 / -1;
+      font-size: 14px;
+      color: var(--ink-soft);
+      margin-top: 6px;
+    }
+
+    /* Layout: board + reading */
+    .main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* The board */
+    .board-wrap { position: relative; }
+    .compass {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: var(--board);
+      border: 2px solid var(--ink);
+      aspect-ratio: 1 / 1;
+    }
+    .palace {
+      position: relative;
+      padding: 12px 12px 10px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .palace:nth-child(3n) { border-right: none; }
+    .palace:nth-child(n+7) { border-bottom: none; }
+
+    .palace .watermark {
+      position: absolute;
+      right: -6px;
+      bottom: -18px;
+      font-family: var(--han);
+      font-weight: 900;
+      font-size: 108px;
+      line-height: 1;
+      color: var(--ink);
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .palace.is-you { background: rgba(181, 53, 43, 0.06); }
+    .palace.is-matter { background: rgba(47, 74, 107, 0.07); }
+
+    .p-head { display: flex; align-items: baseline; gap: 6px; padding-right: 30px; }
+    .p-tri { font-family: var(--han); font-weight: 600; font-size: 18px; }
+    .p-name { font-weight: 600; font-size: 14px; }
+    .p-where { font-size: 12px; color: var(--ink-soft); line-height: 1.3; }
+
+    .p-door {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin: 8px 0 6px;
+    }
+    .p-door .han {
+      font-family: var(--han);
+      font-weight: 900;
+      font-size: 32px;
+      line-height: 1;
+    }
+    .p-door .en { font-size: 14px; font-style: italic; }
+    .palace.adverse .p-door .han { color: var(--cinnabar); }
+
+    .p-facts {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1px 8px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .p-facts dt { font-family: var(--han); font-weight: 600; white-space: nowrap; }
+    .p-facts dd { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .palace.center {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--ink-soft);
+    }
+    .palace.center .zhong {
+      font-family: var(--han);
+      font-weight: 900;
+      font-size: 56px;
+      line-height: 1;
+      color: var(--ink);
+      opacity: 0.85;
+    }
+    .palace.center p { font-size: 13px; margin-top: 6px; }
+
+    /* Seals */
+    .seal {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      font-family: var(--han);
+      font-weight: 900;
+      font-size: 18px;
+      line-height: 1;
+      border-radius: 3px;
+    }
+    .seal.you { background: var(--cinnabar); color: var(--board); transform: rotate(-4deg); }
+    .seal.matter { border: 2px solid var(--indigo); color: var(--indigo); transform: rotate(3deg); }
+    .palace.is-you.is-matter .seal.matter { top: 44px; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .seal.stamp { animation: stamp 420ms cubic-bezier(.2, .9, .3, 1.2) both; }
+      .seal.matter.stamp { animation-delay: 160ms; }
+      @keyframes stamp {
+        from { opacity: 0; transform: scale(1.8) rotate(-12deg); }
+        to   { opacity: 1; }
+      }
+    }
+
+    /* Reading */
+    .reading { padding-top: 22px; }
+    .reading .question {
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.4;
+      margin-bottom: 28px;
+    }
+
+    .relation {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: start;
+      text-align: center;
+      gap: 8px;
+      padding: 20px 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+    }
+    .relation .glyph {
+      font-family: var(--han);
+      font-weight: 900;
+      font-size: 60px;
+      line-height: 1.05;
+    }
+    .relation .verb .glyph { font-weight: 400; font-size: 34px; padding-top: 14px; color: var(--ink-soft); }
+    .relation .cap { font-size: 13px; color: var(--ink-soft); line-height: 1.35; }
+    .relation .side-you .glyph { color: var(--cinnabar); }
+    .relation .side-matter .glyph { color: var(--indigo); }
+
+    .verdict { margin: 24px 0 14px; }
+    .verdict strong {
+      display: block;
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+    .verdict span { font-size: 17px; color: var(--ink-soft); }
+    .tone-good strong { color: var(--jade); }
+    .tone-even strong { color: var(--ink); }
+    .tone-care strong { color: var(--ochre); }
+    .tone-bad strong { color: var(--cinnabar); }
+
+    .reading p.body { margin-bottom: 18px; max-width: 58ch; }
+
+    .door-note {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .door-note .han {
+      font-family: var(--han);
+      font-weight: 900;
+      font-size: 40px;
+      line-height: 1;
+    }
+    .door-note.adverse .han { color: var(--cinnabar); }
+    .door-note p { font-size: 15px; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin-top: 28px;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+    .legend div { display: flex; align-items: center; gap: 8px; }
+    .legend .seal { position: static; width: 22px; height: 22px; font-size: 13px; }
+
+    footer {
+      margin-top: 56px;
+      font-size: 13px;
+      color: var(--ink-soft);
+      max-width: 70ch;
+    }
+
+    @media (max-width: 860px) {
+      .main { grid-template-columns: 1fr; gap: 32px; }
+      .reading { padding-top: 0; }
+    }
+    @media (max-width: 560px) {
+      .page { padding: 32px 16px 56px; }
+      header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .mark { font-size: 48px; }
+      .ask { grid-template-columns: 1fr; }
+      .ask button { justify-self: start; }
+      .board { aspect-ratio: auto; }
+      .palace { padding: 8px 7px; min-height: 150px; }
+      .palace .watermark { font-size: 76px; }
+      .p-head { flex-direction: column; gap: 0; padding-right: 22px; }
+      .p-where { display: none; }
+      .p-door { flex-direction: column; gap: 0; margin: 4px 0; }
+      .p-door .han { font-size: 24px; }
+      .p-door .en { font-size: 12px; }
+      .p-facts { grid-template-columns: 1fr; font-size: 11px; }
+      .p-facts dd { display: none; }
+      .seal { width: 22px; height: 22px; font-size: 13px; top: 6px; right: 6px; }
+      .palace.is-you.is-matter .seal.matter { top: 32px; }
+      .relation .glyph { font-size: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="mark" aria-hidden="true">奇<span>門</span></div>
+      <div class="masthead-text">
+        <h1>Qimen decision chart</h1>
+        <p>Ask a question, cast the nine palaces, and read where you stand against the matter.</p>
+      </div>
+    </header>
+
+    <div class="ask">
+      <label for="queryInput">What are you deciding?</label>
+      <input type="text" id="queryInput" placeholder="Should I sign the contract with the distributor today?" autocomplete="off">
+      <button id="castBtn">Cast chart</button>
+      <div class="stamp-time" id="castTime"></div>
+    </div>
+
+    <div class="main">
+      <div class="board-wrap">
+        <div class="compass" aria-hidden="true"><span>South-east</span><span>South</span><span>South-west</span></div>
+        <!-- 3x3 Luo Shu: SE (4), S (9), SW (2), E (3), C (5), W (7), NE (8), N (1), NW (6) -->
+        <div class="board" id="grid" role="grid" aria-label="Nine palace chart"></div>
+        <div class="compass" aria-hidden="true" style="margin-top:6px;margin-bottom:0"><span>North-east</span><span>North</span><span>North-west</span></div>
+      </div>
+
+      <section class="reading" id="reading" aria-live="polite"></section>
+    </div>
+
+    <footer>
+      The chart is seeded from your question and the current five-minute window, so asking the same question again within that window gives the same chart.
+    </footer>
+  </div>
+
+  <script>
+    const PALACES = [
+      { id: 4, name: "Xun",  dir: "South-east", element: "Wood",  tri: "巽", idx: 0 },
+      { id: 9, name: "Li",   dir: "South",      element: "Fire",  tri: "離", idx: 1 },
+      { id: 2, name: "Kun",  dir: "South-west", element: "Earth", tri: "坤", idx: 2 },
+      { id: 3, name: "Zhen", dir: "East",       element: "Wood",  tri: "震", idx: 3 },
+      { id: 5, name: "Center", dir: "Center",   element: "Earth", tri: "中", idx: 4 },
+      { id: 7, name: "Dui",  dir: "West",       element: "Metal", tri: "兌", idx: 5 },
+      { id: 8, name: "Gen",  dir: "North-east", element: "Earth", tri: "艮", idx: 6 },
+      { id: 1, name: "Kan",  dir: "North",      element: "Water", tri: "坎", idx: 7 },
+      { id: 6, name: "Qian", dir: "North-west", element: "Metal", tri: "乾", idx: 8 }
+    ];
+
+    const DEITIES = ["Leader (Chief)", "Nine Heaven", "Nine Earth", "Six Harmony", "Black Tortoise", "White Tiger", "Surging Snake", "Moon"];
+    const STARS = ["Tian Peng", "Tian Ren", "Tian Chong", "Tian Fu", "Tian Ying", "Tian Rui", "Tian Zhu", "Tian Xin"];
+    const DOORS = ["Open Door", "Rest Door", "Life Door", "Harm Door", "Du Door", "Scenery Door", "Death Door", "Fear Door"];
+    const STEMS = ["Jia", "Yi", "Bing", "Ding", "Wu", "Ji", "Geng", "Xin", "Ren", "Gui"];
+
+    const HAN = {
+      "Leader (Chief)": "值符", "Nine Heaven": "九天", "Nine Earth": "九地", "Six Harmony": "六合",
+      "Black Tortoise": "玄武", "White Tiger": "白虎", "Surging Snake": "螣蛇", "Moon": "太陰",
+      "Tian Peng": "天蓬", "Tian Ren": "天任", "Tian Chong": "天沖", "Tian Fu": "天輔",
+      "Tian Ying": "天英", "Tian Rui": "天芮", "Tian Zhu": "天柱", "Tian Xin": "天心",
+      "Open Door": "開", "Rest Door": "休", "Life Door": "生", "Harm Door": "傷",
+      "Du Door": "杜", "Scenery Door": "景", "Death Door": "死", "Fear Door": "驚",
+      Jia: "甲", Yi: "乙", Bing: "丙", Ding: "丁", Wu: "戊", Ji: "己", Geng: "庚", Xin: "辛", Ren: "壬", Gui: "癸",
+      Wood: "木", Fire: "火", Earth: "土", Metal: "金", Water: "水"
+    };
+    const ADVERSE_DOORS = ["Death Door", "Fear Door", "Harm Door"];
+
+    const ELEMENT_CYCLES = {
+      generates: { Wood: "Fire", Fire: "Earth", Earth: "Metal", Metal: "Water", Water: "Wood" },
+      controls:  { Wood: "Earth", Earth: "Water", Water: "Fire", Fire: "Metal", Metal: "Wood" }
+    };
+
+    function shuffle(arr, seed) {
+      const copy = [...arr];
+      let m = copy.length, t, i;
+      while (m) {
+        i = Math.floor(Math.abs(Math.sin(seed++)) * m--);
+        t = copy[m];
+        copy[m] = copy[i];
+        copy[i] = t;
+      }
+      return copy;
+    }
+
+    function generateChart(queryText) {
+      const now = new Date();
+      let hash = 0;
+      const str = queryText + now.getUTCFullYear() + now.getUTCMonth() + now.getUTCDate() + now.getUTCHours() + Math.floor(now.getUTCMinutes() / 5);
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+      }
+      let seed = Math.abs(hash) + 1;
+
+      const outerIndices = [0, 1, 2, 3, 5, 6, 7, 8];
+      const shuffledDeities = shuffle(DEITIES, seed);
+      const shuffledStars = shuffle(STARS, seed + 1);
+      const shuffledDoors = shuffle(DOORS, seed + 2);
+      const shuffledHStems = shuffle(STEMS.slice(0, 8), seed + 3);
+      const shuffledEStems = shuffle(STEMS.slice(2, 10), seed + 4);
+
+      const chartData = {};
+      outerIndices.forEach((pIdx, i) => {
+        chartData[pIdx] = {
+          deity: shuffledDeities[i % shuffledDeities.length],
+          star: shuffledStars[i % shuffledStars.length],
+          door: shuffledDoors[i % shuffledDoors.length],
+          heavenStem: shuffledHStems[i % shuffledHStems.length],
+          earthStem: shuffledEStems[i % shuffledEStems.length]
+        };
+      });
+
+      const youPalaceIdx = outerIndices[Math.floor(Math.abs(Math.sin(seed + 5)) * outerIndices.length)];
+      let matterPalaceIdx = outerIndices[Math.floor(Math.abs(Math.cos(seed + 6)) * outerIndices.length)];
+      if (matterPalaceIdx === youPalaceIdx) {
+        matterPalaceIdx = outerIndices[(outerIndices.indexOf(youPalaceIdx) + 3) % outerIndices.length];
+      }
+
+      return { chartData, youPalaceIdx, matterPalaceIdx, castAt: now };
+    }
+
+    // flow: "you-matter" means the verb reads from you to the matter; "matter-you" the reverse
+    function evaluateRelationship(youElem, matterElem) {
+      if (youElem === matterElem) {
+        return {
+          verb: "比", verbCap: "stand level with", flow: "you-matter",
+          headline: "Stable, peer alignment", action: "Work it through together",
+          tone: "tone-even",
+          summary: "Both sides share the same baseline frequency. Collaboration and consensus-driven actions will proceed without friction, though progress depends entirely on internal discipline rather than external momentum."
+        };
+      } else if (ELEMENT_CYCLES.generates[matterElem] === youElem) {
+        return {
+          verb: "生", verbCap: "feeds", flow: "matter-you",
+          headline: "Strong advantage", action: "Go ahead",
+          tone: "tone-good",
+          summary: "The opportunity and circumstances naturally support your position. External resources flow toward you; moving forward requires low friction and yields favorable results."
+        };
+      } else if (ELEMENT_CYCLES.generates[youElem] === matterElem) {
+        return {
+          verb: "生", verbCap: "feeds", flow: "you-matter",
+          headline: "Resource drain", action: "Proceed, with discipline",
+          tone: "tone-care",
+          summary: "You are fueling the endeavor at your own expense. Success is achievable, but requires heavy expenditure of energy, capital, or attention before reaching equilibrium."
+        };
+      } else if (ELEMENT_CYCLES.controls[youElem] === matterElem) {
+        return {
+          verb: "剋", verbCap: "restrains", flow: "you-matter",
+          headline: "Uphill effort", action: "Hold the reins yourself",
+          tone: "tone-care",
+          summary: "You hold the capability to direct the outcome, but the situation will not adapt on its own. You must actively manage execution, enforce boundaries, and maintain leverage."
+        };
+      } else {
+        return {
+          verb: "剋", verbCap: "restrains", flow: "matter-you",
+          headline: "High obstacle", action: "Pause, or change course",
+          tone: "tone-bad",
+          summary: "The environment or counterparty exerts resistance over you. Pushing forward directly invites unnecessary friction, legal snags, or contract vulnerabilities. Re-evaluate terms before committing."
+        };
+      }
+    }
+
+    function esc(s) {
+      return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    function renderGrid(chart, youIdx, matterIdx) {
+      const container = document.getElementById("grid");
+      container.innerHTML = "";
+
+      PALACES.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "palace";
+        div.setAttribute("role", "gridcell");
+
+        if (p.idx === 4) {
+          div.classList.add("center");
+          div.innerHTML = `<div class="zhong" aria-hidden="true">中</div><p>Center palace, earth.<br>Not read in this chart.</p>`;
+          container.appendChild(div);
+          return;
+        }
+
+        const d = chart[p.idx];
+        const isYou = p.idx === youIdx;
+        const isMatter = p.idx === matterIdx;
+        if (isYou) div.classList.add("is-you");
+        if (isMatter) div.classList.add("is-matter");
+        if (ADVERSE_DOORS.includes(d.door)) div.classList.add("adverse");
+
+        let seals = "";
+        if (isYou) seals += `<div class="seal you stamp" title="You (day stem)">我</div>`;
+        if (isMatter) seals += `<div class="seal matter stamp" title="The matter (hour stem)">事</div>`;
+
+        const label = `${p.name}, ${p.dir}, ${p.element}. ${d.door}. Star ${d.star}. Deity ${d.deity}. Stems ${d.heavenStem} over ${d.earthStem}.` +
+          (isYou ? " Your palace." : "") + (isMatter ? " The matter's palace." : "");
+        div.setAttribute("aria-label", label);
+
+        div.innerHTML = `
+          <div class="watermark" aria-hidden="true">${p.tri}</div>
+          ${seals}
+          <div class="p-head" aria-hidden="true">
+            <span class="p-tri">${p.tri}</span>
+            <span class="p-name">${p.name}</span>
+          </div>
+          <div class="p-where" aria-hidden="true">${p.dir}, ${p.element.toLowerCase()} ${HAN[p.element]}</div>
+          <div class="p-door" aria-hidden="true">
+            <span class="han">${HAN[d.door]}</span>
+            <span class="en">${d.door.replace(" Door", "").toLowerCase()} door</span>
+          </div>
+          <dl class="p-facts" aria-hidden="true">
+            <dt>${HAN[d.star]}</dt><dd>${d.star.replace("Tian ", "")} star</dd>
+            <dt>${HAN[d.deity]}</dt><dd>${d.deity.replace(" (Chief)", "")}</dd>
+            <dt>${HAN[d.heavenStem]}／${HAN[d.earthStem]}</dt><dd>${d.heavenStem} over ${d.earthStem}</dd>
+          </dl>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderReading(query, chart, youIdx, matterIdx) {
+      const you = PALACES[youIdx];
+      const matter = PALACES[matterIdx];
+      const d = chart[matterIdx];
+      const rel = evaluateRelationship(you.element, matter.element);
+      const adverse = ADVERSE_DOORS.includes(d.door);
+
+      const youSide = `<div class="side-you"><div class="glyph">${HAN[you.element]}</div><div class="cap">You<br>${you.name}, ${you.element.toLowerCase()}</div></div>`;
+      const matterSide = `<div class="side-matter"><div class="glyph">${HAN[matter.element]}</div><div class="cap">The matter<br>${matter.name}, ${matter.element.toLowerCase()}</div></div>`;
+      const verb = `<div class="verb"><div class="glyph">${rel.verb}</div><div class="cap">${rel.verbCap}</div></div>`;
+      const relation = rel.flow === "you-matter" ? youSide + verb + matterSide : matterSide + verb + youSide;
+
+      const doorText = adverse
+        ? "An obstacle door sits in the matter's palace. Check the contract, any hidden agendas and the logistics before you commit."
+        : "A working door sits in the matter's palace, so there are open routes for negotiation and progress.";
+
+      document.getElementById("reading").innerHTML = `
+        <h2 class="question">“${esc(query)}”</h2>
+        <div class="relation">${relation}</div>
+        <div class="verdict ${rel.tone}">
+          <strong>${rel.headline}</strong>
+          <span>${rel.action}</span>
+        </div>
+        <p class="body">${rel.summary}</p>
+        <div class="door-note ${adverse ? "adverse" : ""}">
+          <div class="han" aria-hidden="true">${HAN[d.door]}</div>
+          <p>The matter carries the <em>${d.door.toLowerCase()}</em>, with the ${d.deity.replace(" (Chief)", "")} deity. ${doorText}</p>
+        </div>
+        <div class="legend">
+          <div><span class="seal you">我</span> Your palace (day stem)</div>
+          <div><span class="seal matter">事</span> The matter (hour stem)</div>
+        </div>
+      `;
+    }
+
+    function cast() {
+      const query = document.getElementById("queryInput").value.trim() || "A general question";
+      const { chartData, youPalaceIdx, matterPalaceIdx, castAt } = generateChart(query);
+
+      renderGrid(chartData, youPalaceIdx, matterPalaceIdx);
+      renderReading(query, chartData, youPalaceIdx, matterPalaceIdx);
+
+      const when = castAt.toLocaleString(undefined, { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+      document.getElementById("castTime").textContent = `Cast ${when}`;
+    }
+
+    document.getElementById("castBtn").addEventListener("click", cast);
+    document.getElementById("queryInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") cast();
+    });
+
+    cast();
+  </script>
+</body>
+</html>
