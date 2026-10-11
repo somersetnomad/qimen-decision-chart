@@ -117,8 +117,33 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 6px 12px;
-      margin-bottom: 36px;
+      margin-bottom: 12px;
     }
+
+    .settings { margin-bottom: 32px; max-width: 760px; font-size: 15px; }
+    .settings summary { cursor: pointer; color: var(--ink-soft); width: max-content; }
+    .settings summary:hover { color: var(--ink); }
+    .settings-body {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      padding: 16px 0 4px;
+    }
+    .settings fieldset { border: none; display: grid; gap: 6px; align-content: start; }
+    .settings legend { font-weight: 600; margin-bottom: 4px; }
+    .settings label { display: block; line-height: 1.4; }
+    .settings input[type=radio] { accent-color: var(--ink); margin-right: 4px; }
+    .settings input[type=number] {
+      width: 6.5em;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--ink-soft);
+      border-radius: 0;
+      padding: 0 2px;
+      font-size: 15px;
+    }
+    .settings .hint { font-size: 13px; color: var(--ink-soft); line-height: 1.4; }
+    @media (max-width: 760px) { .settings-body { grid-template-columns: 1fr; } }
     .when input {
       font-size: 16px;
       background: transparent;
@@ -286,8 +311,8 @@
     .palace.is-you.is-matter .seal.matter { top: 44px; }
 
     @media (prefers-reduced-motion: no-preference) {
-      .seal.stamp { animation: stamp 420ms cubic-bezier(.2, .9, .3, 1.2) both; animation-delay: 760ms; }
-      .seal.matter.stamp { animation-delay: 920ms; }
+      .seal.stamp { animation: stamp 380ms cubic-bezier(.2, .9, .3, 1.2) both; animation-delay: 420ms; }
+      .seal.matter.stamp { animation-delay: 560ms; }
       @keyframes stamp {
         from { opacity: 0; transform: scale(1.8) rotate(-12deg); }
         to   { opacity: 1; }
@@ -396,7 +421,8 @@
     .j-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; }
     .j-top time { color: var(--ink-soft); }
     .j-top .j-verdict { font-weight: 600; }
-    .j-q { font-style: italic; font-size: 18px; margin: 4px 0 10px; }
+    .j-q { font-style: italic; font-size: 18px; margin: 4px 0 2px; }
+    .j-pal { font-size: 14px; color: var(--ink-soft); margin-bottom: 10px; }
     .j-controls { display: flex; align-items: center; gap: 8px 18px; flex-wrap: wrap; font-size: 14px; }
     .j-controls select {
       background: var(--board);
@@ -420,6 +446,37 @@
     .j-item textarea:focus { outline: none; border-color: var(--ink); }
 
     footer { margin-top: 56px; font-size: 13px; color: var(--ink-soft); max-width: 70ch; }
+
+    /* Printed brief: hidden on screen, the only thing printed */
+    .brief { display: none; }
+    @media print {
+      @page { size: A4; margin: 14mm 14mm 12mm; }
+      body { background: #fff; color: #000; font-size: 10pt; line-height: 1.4; }
+      .page, dialog { display: none !important; }
+      .brief { display: block; width: 100%; }
+      .brief * { color: #000 !important; }
+      .brief header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1.5pt solid #000; padding-bottom: 4pt; margin: 0 0 8pt; gap: 12pt; }
+      .brief h1 { font-weight: 600; font-size: 15pt; line-height: 1.2; }
+      .brief .b-mark { font-family: var(--han); font-weight: 900; font-size: 22pt; line-height: 1; }
+      .brief .b-q { font-style: italic; font-size: 13pt; margin-bottom: 4pt; }
+      .brief .b-meta { display: grid; grid-template-columns: repeat(4, auto) 1fr; gap: 2pt 14pt; align-items: baseline; font-size: 9pt; margin-bottom: 8pt; }
+      .brief .b-meta b { font-family: var(--han); font-size: 12pt; font-weight: 600; }
+      .brief .b-verdict { display: flex; gap: 10pt; align-items: baseline; border-top: 0.75pt solid #000; border-bottom: 0.75pt solid #000; padding: 5pt 0; margin-bottom: 8pt; }
+      .brief .b-verdict strong { font-size: 14pt; }
+      .brief .b-rel { font-family: var(--han); font-size: 16pt; font-weight: 900; white-space: nowrap; }
+      .brief .b-verdict strong { white-space: nowrap; }
+      .brief table { width: 99.5%; border-collapse: collapse; table-layout: fixed; margin-bottom: 8pt; }
+      .brief td { border: 0.75pt solid #000; vertical-align: top; padding: 4pt 5pt; font-size: 8.5pt; line-height: 1.3; height: 34mm; }
+      .brief td .b-pal { font-weight: 600; font-size: 9pt; }
+      .brief td .b-door { font-family: var(--han); font-weight: 900; font-size: 15pt; line-height: 1.1; }
+      .brief td .b-role { float: right; font-family: var(--han); font-weight: 900; border: 1pt solid #000; padding: 0 2pt; margin-left: 2pt; }
+      .brief td .b-marks { font-style: italic; }
+      .brief .b-han { font-family: var(--han); }
+      .brief h2 { font-size: 10.5pt; font-weight: 600; margin: 6pt 0 2pt; }
+      .brief p, .brief li { font-size: 9.5pt; }
+      .brief ul { padding-left: 12pt; }
+      .brief .b-foot { margin-top: 8pt; padding-top: 4pt; border-top: 0.5pt solid #000; font-size: 7.5pt; }
+    }
 
     @media (max-width: 860px) {
       .main { grid-template-columns: 1fr; gap: 32px; }
@@ -483,6 +540,29 @@
       <button class="link" id="nowBtn" type="button">Use the current time</button>
     </div>
 
+    <details class="settings" id="settings">
+      <summary>Calculation settings</summary>
+      <div class="settings-body">
+        <fieldset>
+          <legend>Choosing the ju</legend>
+          <label><input type="radio" name="method" value="chaibu" checked> Chai bu (拆補): the term in force at the moment of casting</label>
+          <label><input type="radio" name="method" value="zhirun"> Zhi run (置閏): yuan heads take terms in turn, with a repeated Grain in Ear or Major Snow when they run ahead</label>
+        </fieldset>
+        <fieldset>
+          <legend>Time for the pillars</legend>
+          <label><input type="radio" name="basis" value="clock" checked> This device's clock</label>
+          <label><input type="radio" name="basis" value="solar"> True solar time at longitude
+            <input type="number" id="lonInput" step="0.01" min="-180" max="180" placeholder="e.g. -0.13" aria-label="Longitude in degrees, east positive"> °E</label>
+          <p class="hint">West is negative. London is about −0.13, New York −74.0, Shanghai 121.5.</p>
+        </fieldset>
+        <fieldset>
+          <legend>Travelling Horse from</legend>
+          <label><input type="radio" name="horse" value="hour" checked> The hour branch</label>
+          <label><input type="radio" name="horse" value="day"> The day branch</label>
+        </fieldset>
+      </div>
+    </details>
+
     <div class="meta" id="meta"></div>
 
     <div class="main">
@@ -515,9 +595,10 @@
   </div>
 
   <dialog class="drawer" id="drawer" aria-labelledby="drawerTitle"></dialog>
+  <div class="brief" id="brief"></div>
 
   <script id="engine">
-    /* ---------- Qimen Dun Jia engine: hour chart, rotating plate, chai bu ---------- */
+    /* ---------- Qimen Dun Jia engine: hour chart, rotating plate ---------- */
     const STEM_HAN = "甲乙丙丁戊己庚辛壬癸".split("");
     const STEM_PY = ["Jia", "Yi", "Bing", "Ding", "Wu", "Ji", "Geng", "Xin", "Ren", "Gui"];
     const BRANCH_HAN = "子丑寅卯辰巳午未申酉戌亥".split("");
@@ -580,21 +661,106 @@
     };
     const DEITY_ORDER = ["leader", "snake", "moon", "harmony", "tiger", "tortoise", "earth", "heaven"];
 
-    // Heaven-plate stem over earth-plate stem
-    const PATTERNS = {
-      "4-2": { han: "青龍返首", en: "Green Dragon Returns", score: 1,  text: "Strong, unexpected support. A good omen for action." },
-      "2-4": { han: "飛鳥跌穴", en: "Bird Drops into the Nest", score: 1, text: "Success arrives with little effort; opportunity lands in your lap." },
-      "1-7": { han: "青龍逃走", en: "Green Dragon Escapes", score: -1, text: "Loss through partners or helpers slipping away. Guard your assets." },
-      "7-1": { han: "白虎猖狂", en: "White Tiger Rampant", score: -1, text: "Pressure and harm from strong forces. Avoid confrontation." },
-      "3-9": { han: "朱雀投江", en: "Red Bird Plunges into the River", score: -1, text: "Documents and words go astray. Expect disputes over paperwork." },
-      "9-3": { han: "螣蛇夭矯", en: "Snake Writhes", score: -1, text: "Confusion, worry and tangled communication." },
-      "6-2": { han: "太白入熒", en: "Metal Enters Fire", score: -1, text: "A threat approaches. Secure your position." },
-      "2-6": { han: "熒入太白", en: "Fire Enters Metal", score: -1, text: "A threat withdraws, but loss is still possible." },
-      "6-4": { han: "天乙伏宮", en: "Tianyi Lies Low", score: -1, text: "Obstruction from authority or a powerful counterparty." },
-      "4-6": { han: "天乙飛宮", en: "Tianyi Takes Flight", score: -1, text: "Plans are disrupted by changes from outside." },
-      "6-6": { han: "太白同宮", en: "Metal Meets Metal", score: -1, text: "Clashing forces and conflict between peers." }
-    };
+    // Heaven-plate stem over earth-plate stem (十干克應). Jia hides under Wu, so 戊 stands for it.
+    const PATTERN_LIST = [
+      ["戊戊", "伏吟", "Stillness", -1, "Everything holds still. Keep what you have and avoid new moves."],
+      ["戊乙", "青龍合會", "Dragon Meets the Sun", 1, "Help and good fortune with a good door; trouble with a bad one."],
+      ["戊丙", "青龍返首", "Green Dragon Returns", 1, "Strong, unexpected support. A good omen for action."],
+      ["戊丁", "青龍耀明", "Dragon Shines", 1, "Recognition and favor from those above. Good for seeking approval."],
+      ["戊己", "貴人入獄", "Noble in Prison", -1, "Support is tied up; people who could help cannot act."],
+      ["戊庚", "值符飛宮", "Leader Takes Flight", -1, "Authority is unsettled. Expect changes of position or plan."],
+      ["戊辛", "青龍折足", "Dragon Breaks a Leg", -1, "Setbacks in movement and money. Beware injury and loss."],
+      ["戊壬", "青龍入天牢", "Dragon in Heaven's Jail", -1, "Plans are confined. Delays and restrictions."],
+      ["戊癸", "青龍華蓋", "Dragon under the Canopy", 1, "With a good door, protection and quiet success."],
+      ["乙乙", "日奇伏吟", "Sun Noble Stands Still", -1, "Stay put; moving or seeking favors brings little."],
+      ["乙丙", "奇儀順遂", "Nobles Flow Together", 1, "Things go smoothly. Promotion and good news."],
+      ["乙丁", "奇儀相佐", "Nobles Assist Each Other", 1, "Mutual help. Good for documents and plans."],
+      ["乙戊", "利陰害陽", "Helps Yin, Harms Yang", -1, "Quiet, private matters go well; open action does not."],
+      ["乙己", "日奇入霧", "Sun Noble in Mist", -1, "Clarity is lost. Things are obscured or delayed."],
+      ["乙庚", "日奇被刑", "Sun Noble Punished", -1, "Disputes over money and between partners."],
+      ["乙辛", "青龍逃走", "Green Dragon Escapes", -1, "Loss through partners or helpers slipping away. Guard your assets."],
+      ["乙壬", "日奇入地", "Sun Noble Goes Underground", -1, "Things sink from view and plans stall."],
+      ["乙癸", "華蓋逢星", "Canopy Meets the Star", 0, "Good for withdrawal, study and quiet work; poor for public action."],
+      ["丙丙", "月奇悖師", "Moon Noble Rebels", -1, "Confusion in documents and authority. Mistakes and disorder."],
+      ["丙乙", "日月並行", "Sun and Moon Together", 1, "Public and private aims align, with benefits for both sides."],
+      ["丙丁", "月奇朱雀", "Moon Noble with the Red Bird", 1, "Good news, documents and reputation favor you."],
+      ["丙戊", "飛鳥跌穴", "Bird Drops into the Nest", 1, "Success arrives with little effort; opportunity lands in your lap."],
+      ["丙己", "大悖入刑", "Great Disorder Punished", -1, "Legal trouble and confinement. Avoid disputes."],
+      ["丙庚", "熒入太白", "Fire Enters Metal", -1, "A threat withdraws, but loss is still possible."],
+      ["丙辛", "謀事就成", "Plans Come Together", 1, "What you plan succeeds. Good for agreements."],
+      ["丙壬", "火入天羅", "Fire in Heaven's Net", -1, "Caught by circumstances. Disputes and setbacks."],
+      ["丙癸", "華蓋悖師", "Disorder under the Canopy", -1, "Hidden confusion and trouble for those in charge."],
+      ["丁丁", "星奇伏吟", "Star Noble Stands Still", 0, "Documents and news are slow; quiet matters are fine."],
+      ["丁乙", "人遁吉格", "Human Escape", 1, "Good for seeking help, hiring and making friends."],
+      ["丁丙", "星隨月轉", "Star Follows the Moon", 1, "Promotion and progress, but guard against overreach."],
+      ["丁戊", "青龍轉光", "Dragon Turns to the Light", 1, "Favor from above. Good for careers and petitions."],
+      ["丁己", "火入勾陳", "Fire Enters the Hook", -1, "Entanglements and messy relationships."],
+      ["丁庚", "文書阻隔", "Documents Blocked", -1, "Paperwork, messages and travel are held up."],
+      ["丁辛", "朱雀入獄", "Red Bird in Prison", -1, "Communication is shut down; legal risk over words or documents."],
+      ["丁壬", "奇儀相合", "Noble and Ceremony Combine", 1, "Agreements and contracts come together."],
+      ["丁癸", "朱雀投江", "Red Bird Plunges into the River", -1, "Documents and words go astray. Expect disputes over paperwork."],
+      ["己己", "地戶逢鬼", "Earth Door Meets a Ghost", -1, "Illness and stagnation. Avoid starting anything."],
+      ["己乙", "墓神不明", "Tomb Spirit in Shadow", -1, "Things are unclear and hidden. Avoid new commitments."],
+      ["己丙", "火悖地戶", "Fire Disrupts the Earth Door", -1, "Plots and harm from others. Stay alert."],
+      ["己丁", "朱雀入墓", "Red Bird Enters the Tomb", -1, "Documents and lawsuits go nowhere."],
+      ["己戊", "犬遇青龍", "Dog Meets the Dragon", 1, "Help from above; plans can succeed with a good door."],
+      ["己庚", "刑格返名", "Punishment Reverses the Name", -1, "Disputes and reversals put your reputation at risk."],
+      ["己辛", "遊魂入墓", "Wandering Soul Enters the Tomb", -1, "Confusion, unease and hidden troubles."],
+      ["己壬", "地網高張", "Earth Net Spread High", -1, "Traps and entanglement. Hold back."],
+      ["己癸", "地刑玄武", "Earth Punishes the Tortoise", -1, "Illness, theft or legal trouble."],
+      ["庚庚", "太白同宮", "Metal Meets Metal", -1, "Clashing forces and conflict between peers."],
+      ["庚乙", "太白逢星", "Metal Meets the Star", -1, "Retreat is wise; advancing brings loss."],
+      ["庚丙", "太白入熒", "Metal Enters Fire", -1, "A threat approaches. Secure your position."],
+      ["庚丁", "亭亭之格", "Private Pavilion", 0, "Private and personal matters stir. Watch for scandal."],
+      ["庚戊", "天乙伏宮", "Tianyi Lies Low", -1, "Obstruction from authority or a powerful counterparty."],
+      ["庚己", "刑格", "Punishment Pattern", -1, "Legal trouble and harm. Avoid confrontation."],
+      ["庚辛", "白虎干格", "Tiger Strikes", -1, "Accidents and disputes. Avoid travel and risks."],
+      ["庚壬", "移蕩格", "Drifting Pattern", -1, "Things scatter; people and plans go missing."],
+      ["庚癸", "大格", "Great Obstruction", -1, "Blocked on all sides. Delay is wiser."],
+      ["辛辛", "伏吟天庭", "Heaven's Court Stands Still", -1, "Disputes stall in deadlock; trouble is self-inflicted."],
+      ["辛乙", "白虎猖狂", "White Tiger Rampant", -1, "Pressure and harm from strong forces. Avoid confrontation."],
+      ["辛丙", "干合悖師", "Combined but Contrary", 0, "Agreement on the surface, disorder beneath."],
+      ["辛丁", "獄神得奇", "Jailer Finds a Noble", 1, "Release from trouble and profit from unexpected quarters."],
+      ["辛戊", "困龍被傷", "Trapped Dragon Hurt", -1, "Losses and harm. Keep a low profile."],
+      ["辛己", "入獄自刑", "Self-Imprisoned", -1, "Trouble of your own making, with legal risk."],
+      ["辛庚", "白虎出力", "Tiger Exerts Force", -1, "Force meets force: conflict and damage."],
+      ["辛壬", "凶蛇入獄", "Snake Enters Prison", -1, "Tangled disputes and delays."],
+      ["辛癸", "天牢華蓋", "Canopy over Heaven's Jail", -1, "Mistakes and confinement; plans misfire."],
+      ["壬壬", "天獄自刑", "Heaven's Jail Self-Punished", -1, "Self-defeating effort. Stay still."],
+      ["壬乙", "小蛇得勢", "Small Snake Gains Power", 1, "Quiet strength grows. Good for gradual gains."],
+      ["壬丙", "水蛇入火", "Water Snake Enters Fire", -1, "Conflict and legal trouble."],
+      ["壬丁", "干合蛇刑", "Combined, but the Snake Is Punished", -1, "Agreements bring trouble. Watch for gossip."],
+      ["壬戊", "小蛇化龍", "Small Snake Becomes a Dragon", 1, "Rising fortunes; small beginnings grow large."],
+      ["壬己", "反吟蛇刑", "Snake Turns and Strikes", -1, "Reversal and dispute. Guard against slander."],
+      ["壬庚", "太白擒蛇", "Metal Seizes the Snake", 0, "Disputes are settled by firm authority."],
+      ["壬辛", "螣蛇相纏", "Snakes Entangled", -1, "Tangled affairs and deception."],
+      ["壬癸", "幼女奸淫", "Scandal at Home", -1, "Private scandal and family trouble."],
+      ["癸癸", "天網四張", "Heaven's Net Spread Wide", -1, "Trapped on all sides. Wait."],
+      ["癸乙", "華蓋逢星", "Canopy Meets the Star", 0, "Good for retreat and quiet work."],
+      ["癸丙", "華蓋悖師", "Disorder under the Canopy", -1, "Confusion for those in charge."],
+      ["癸丁", "螣蛇夭矯", "Snake Writhes", -1, "Confusion, worry and tangled communication."],
+      ["癸戊", "天乙合會", "Tianyi Meets", 1, "Marriage, deals and agreements succeed."],
+      ["癸己", "華蓋地戶", "Canopy at the Earth Door", -1, "Concealment and blockage; things fail to surface."],
+      ["癸庚", "太白入網", "Metal Enters the Net", -1, "Caught up in disputes or force."],
+      ["癸辛", "網蓋天牢", "Net over Heaven's Jail", -1, "Legal trouble and confinement."],
+      ["癸壬", "復見螣蛇", "The Snake Returns", -1, "Recurring trouble and deception."]
+    ];
+    const PATTERNS = {};
+    PATTERN_LIST.forEach(([pair, han, en, score, text]) => {
+      PATTERNS[`${STEM_HAN.indexOf(pair[0])}-${STEM_HAN.indexOf(pair[1])}`] = { han, en, score, text, pair };
+    });
+
     const STRIKE = { 4: 3, 5: 2, 6: 8, 7: 9, 8: 4, 9: 4 }; // 六儀擊刑: stem → palace where it is punished
+    const STEM_CLASH = { 0: 6, 6: 0, 1: 7, 7: 1, 2: 8, 8: 2, 3: 9, 9: 3 }; // 甲庚 乙辛 丙壬 丁癸
+
+    function branchPunish(a, b) {
+      if ((a === 0 && b === 3) || (a === 3 && b === 0)) return "mutual";             // 子卯
+      const ungrateful = [2, 5, 8], bullying = [1, 10, 7];                         // 寅巳申, 丑戌未
+      if (a !== b && ungrateful.includes(a) && ungrateful.includes(b)) return "ungrateful";
+      if (a !== b && bullying.includes(a) && bullying.includes(b)) return "bullying";
+      if (a === b && [4, 6, 9, 11].includes(a)) return "self";                       // 辰午酉亥
+      return null;
+    }
 
     const ELEMENT_CYCLES = {
       generates: { Wood: "Fire", Fire: "Earth", Earth: "Metal", Metal: "Water", Water: "Wood" },
@@ -635,29 +801,94 @@
       return mod(L0 + C - 0.00569 - 0.00478 * Math.sin(omega), 360);
     }
 
-    function castChart(date) {
-      const y = date.getFullYear(), mo = date.getMonth() + 1, d = date.getDate(), h = date.getHours();
+    // Moment the sun reaches solar term k (0 = Winter Solstice) nearest to `near`
+    function termInstant(k, near) {
+      const target = mod(270 + 15 * k, 360);
+      let t = near.getTime();
+      for (let i = 0; i < 10; i++) {
+        const diff = mod(target - sunLongitude(new Date(t)) + 180, 360) - 180;
+        t += diff / 360 * 365.2422 * 86400000;
+        if (Math.abs(diff) < 1e-7) break;
+      }
+      return new Date(t);
+    }
+
+    // Equation of time in minutes (accurate to about half a minute)
+    function equationOfTime(date) {
+      const start = Date.UTC(date.getUTCFullYear(), 0, 0);
+      const N = (date.getTime() - start) / 86400000;
+      const B = 2 * Math.PI * (N - 81) / 364;
+      return 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+    }
+
+    // Wall-clock reading used for the pillars: device clock, or true solar time at a longitude
+    function makeWall(opts) {
+      if (opts.basis === "solar" && Number.isFinite(opts.longitude)) {
+        return inst => {
+          const s = new Date(inst.getTime() + opts.longitude / 15 * 3600000 + equationOfTime(inst) * 60000);
+          return { y: s.getUTCFullYear(), mo: s.getUTCMonth() + 1, d: s.getUTCDate(), h: s.getUTCHours(), mi: s.getUTCMinutes(), sec: s.getUTCSeconds() };
+        };
+      }
+      return inst => ({ y: inst.getFullYear(), mo: inst.getMonth() + 1, d: inst.getDate(), h: inst.getHours(), mi: inst.getMinutes(), sec: inst.getSeconds() });
+    }
+    const dayNumber = w => jdn(w.y, w.mo, w.d) + (w.h + w.mi / 60 + w.sec / 3600) / 24;
+    const isUpperHead = day => mod(day + 49, 15) === 0;   // 甲子 己卯 甲午 己酉 days
+
+    // Zhi run (置閏): heads of upper yuan take the solar terms in turn; when a head runs
+    // more than nine days ahead of Summer or Winter Solstice, Grain in Ear or Major Snow repeats.
+    function zhiRun(chartDay, date, wall) {
+      const approx = day => new Date((day - 2440587.5) * 86400000);
+      let head = null;
+      for (let year = wall(date).y - 1, tries = 0; head === null && tries < 12; year--, tries++) {
+        const wsDay = dayNumber(wall(termInstant(0, new Date(Date.UTC(year, 11, 21)))));
+        const h = Math.floor(wsDay) - mod(Math.floor(wsDay) + 49, 15);
+        if (wsDay - h >= 1 && wsDay - h <= 7) head = h;  // unambiguous starting alignment
+      }
+      let term = 0, leap = false;
+      while (head + 15 <= chartDay) {
+        const next = head + 15;
+        let nt = (term + 1) % 24;
+        leap = false;
+        if (term === 11 || term === 23) {
+          const lead = dayNumber(wall(termInstant(nt, approx(next)))) - next;
+          if (lead > 9) { nt = term; leap = true; }
+        }
+        head = next;
+        term = nt;
+      }
+      const lead = dayNumber(wall(termInstant(term, approx(head)))) - head;
+      return { termIdx: term, yuan: Math.floor((chartDay - head) / 5), leap, lead };
+    }
+
+    function castChart(date, opts = {}) {
+      const wall = makeWall(opts);
+      const w = wall(date);
 
       // Day and hour pillars (day turns over at 23:00)
-      const dayDate = new Date(y, mo - 1, h >= 23 ? d + 1 : d);
-      const dayIdx = mod(jdn(dayDate.getFullYear(), dayDate.getMonth() + 1, dayDate.getDate()) + 49, 60);
+      const chartDay = jdn(w.y, w.mo, w.d) + (w.h >= 23 ? 1 : 0);
+      const dayIdx = mod(chartDay + 49, 60);
       const dayStem = dayIdx % 10, dayBranch = dayIdx % 12;
-      const hourBranch = Math.floor((h + 1) / 2) % 12;
+      const hourBranch = Math.floor((w.h + 1) / 2) % 12;
       const hourStem = mod((dayStem % 5) * 2 + hourBranch, 10);
       const hourIdx = gz(hourStem, hourBranch);
 
-      // Solar term, year and month pillars
+      // Year and month pillars from the sun's position
       const lam = sunLongitude(date);
-      const termIdx = Math.floor(mod(lam - 270, 360) / 15);
       const monthIdx = Math.floor(mod(lam - 315, 360) / 30); // 0 = Yin month, from Start of Spring
-      const py = (mo <= 2 && monthIdx >= 10) ? y - 1 : y;
+      const py = (w.mo <= 2 && monthIdx >= 10) ? w.y - 1 : w.y;
       const yearStem = mod(py - 4, 10), yearBranch = mod(py - 4, 12);
       const monthStem = mod((yearStem % 5) * 2 + 2 + monthIdx, 10), monthBranch = mod(monthIdx + 2, 12);
 
-      // Escapement and ju (chai bu: yuan from the day's Jia or Ji "head")
+      // Term, yuan and ju
+      let termIdx, yuan, leap = false, lead = null;
+      if (opts.method === "zhirun") {
+        ({ termIdx, yuan, leap, lead } = zhiRun(chartDay, date, wall));
+      } else {
+        termIdx = Math.floor(mod(lam - 270, 360) / 15);
+        const headBranch = (dayIdx - (dayStem % 5)) % 12;   // the day's Jia or Ji head
+        yuan = [0, 3, 6, 9].includes(headBranch) ? 0 : [2, 5, 8, 11].includes(headBranch) ? 1 : 2;
+      }
       const yang = termIdx < 12;
-      const headBranch = (dayIdx - (dayStem % 5)) % 12;
-      const yuan = [0, 3, 6, 9].includes(headBranch) ? 0 : [2, 5, 8, 11].includes(headBranch) ? 1 : 2;
       const ju = TERMS[termIdx].ju[yuan];
 
       // Earth plate
@@ -686,7 +917,7 @@
 
       // Heaven plate: stars carry their home stems; Qin travels with Rui
       const pal = {};
-      for (const n of RING) pal[n] = { n, stars: [], heaven: [], earth: earth[n], door: null, deity: null, flags: [], patterns: [] };
+      for (const n of RING) pal[n] = { n, stars: [], heaven: [], earth: earth[n], door: null, deity: null, flags: [], patterns: [], clashes: [] };
       RING.forEach((origin, i) => {
         const land = pal[RING[(i + starShift) % 8]];
         land.stars.push(STAR_HOME[origin]);
@@ -697,21 +928,27 @@
       const startI = RING.indexOf(starTarget);
       DEITY_ORDER.forEach((key, k) => { pal[RING[mod(yang ? startI + k : startI - k, 8)]].deity = key; });
 
-      // Flags
+      // Marks
       const addFlag = (n, f) => { if (!pal[n].flags.includes(f)) pal[n].flags.push(f); };
       const b0 = (hourXun * 10) % 12;
       const voidBranches = [(b0 + 10) % 12, (b0 + 11) % 12];
       voidBranches.forEach(b => addFlag(BRANCH_PALACE[b], "void"));
-      const horseBranch = [2, 11, 8, 5][hourBranch % 4];
+      const horseFrom = opts.horseFrom === "day" ? dayBranch : hourBranch;
+      const horseBranch = [2, 11, 8, 5][horseFrom % 4];
       addFlag(BRANCH_PALACE[horseBranch], "horse");
       const clashBranch = (hourBranch + 6) % 12;
       addFlag(BRANCH_PALACE[clashBranch], "clash");
+      pal[BRANCH_PALACE[clashBranch]].clashes.push({ kind: "branch", text: `The hour branch ${BRANCH_HAN[hourBranch]} clashes ${BRANCH_HAN[clashBranch]}, which sits here.` });
       for (const n of RING) {
         const c = pal[n];
         c.heaven.forEach(s => {
           if (STRIKE[s] === n) addFlag(n, "strike");
           const pat = PATTERNS[`${s}-${c.earth}`];
           if (pat) c.patterns.push(pat);
+          if (STEM_CLASH[s] === c.earth) {
+            addFlag(n, "clash");
+            c.clashes.push({ kind: "stem", text: `Heaven-plate ${STEM_HAN[s]} clashes earth-plate ${STEM_HAN[c.earth]}.` });
+          }
         });
         if (ELEMENT_CYCLES.controls[DOORS[c.door].el] === PALACES[n].el) addFlag(n, "pressure");
       }
@@ -721,21 +958,32 @@
       const ds = dayStem === 0 ? dayXunYi : dayStem;
       const findHeaven = s => +Object.keys(pal).find(k => pal[k].heaven.includes(s));
 
+      // Day against hour
+      const relations = {
+        stemClash: STEM_CLASH[dayStem] === hourStem,
+        branchClash: mod(dayBranch - hourBranch, 12) === 6,
+        punish: branchPunish(dayBranch, hourBranch)
+      };
+
       return {
-        date, lam, yang, ju, yuan, term: TERMS[termIdx],
+        date, wall: w, lam, yang, ju, yuan, leap, lead, term: TERMS[termIdx],
+        method: opts.method === "zhirun" ? "zhirun" : "chaibu",
+        basis: opts.basis === "solar" && Number.isFinite(opts.longitude) ? "solar" : "clock",
+        longitude: opts.longitude,
         pillars: {
           year: [yearStem, yearBranch], month: [monthStem, monthBranch],
           day: [dayStem, dayBranch], hour: [hourStem, hourBranch]
         },
         dayUses: ds, hourUses: hs,
-        dutyStar, dutyDoor, voidBranches, horseBranch, clashBranch,
+        dutyStar, dutyDoor, voidBranches, horseBranch, horseFrom: opts.horseFrom === "day" ? "day" : "hour",
+        clashBranch, relations,
         earth5: earth[5], earth, pal,
         youP: findHeaven(ds), matterP: findHeaven(hs),
         fuyin: starShift === 0, fanyin: starShift === 4
       };
     }
 
-    if (typeof module !== "undefined") module.exports = { castChart, sunLongitude, jdn, STARS, DOORS, PALACES };
+    if (typeof module !== "undefined") module.exports = { castChart, sunLongitude, termInstant, jdn, PATTERN_LIST, STARS, DOORS, PALACES };
   </script>
 
   <script>
@@ -748,7 +996,7 @@
     const FLAG_INFO = {
       void:     { han: "空", en: "Void", text: "Hour void. Whatever sits here is empty for now: it may stall, fall through, or arrive later than expected." },
       horse:    { han: "馬", en: "Travelling Horse", text: "Travelling Horse. Movement and speed: travel, change and quick developments." },
-      clash:    { han: "沖", en: "Clash", text: "Clashed by the hour branch. Expect disturbance, reversal or sudden change here." },
+      clash:    { han: "沖", en: "Clash", text: "Clash. Expect friction, disturbance, reversal or sudden change here." },
       strike:   { han: "刑", en: "Strike", text: "Strike-punishment. A ceremonial stem is punished in this palace, bringing friction, injury or setbacks." },
       pressure: { han: "迫", en: "Pressed door", text: "Door pressure. The door's element overcomes the palace, so even a good door works poorly here." }
     };
@@ -789,6 +1037,35 @@
     let current = null;      // { chart, query, rel }
     let timeEdited = false;
 
+    /* ----- Calculation settings (remembered in this browser) ----- */
+    const SETTINGS_KEY = "qimen-settings-v1";
+    const radioValue = name => document.querySelector(`input[name=${name}]:checked`).value;
+    function readOpts() {
+      const lon = parseFloat($("lonInput").value);
+      return { method: radioValue("method"), basis: radioValue("basis"), longitude: Number.isFinite(lon) ? lon : NaN, horseFrom: radioValue("horse") };
+    }
+    function restoreOpts() {
+      let s = null;
+      try { s = JSON.parse(localStorage.getItem(SETTINGS_KEY)); } catch { s = null; }
+      if (!s) return;
+      const setRadio = (name, v) => { const el = document.querySelector(`input[name=${name}][value="${v}"]`); if (el) el.checked = true; };
+      setRadio("method", s.method); setRadio("basis", s.basis); setRadio("horse", s.horseFrom);
+      if (Number.isFinite(s.longitude)) $("lonInput").value = s.longitude;
+      if (s.method !== "chaibu" || s.basis !== "clock" || s.horseFrom !== "hour") $("settings").open = true;
+    }
+    function storeOpts() {
+      try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(readOpts())); } catch { /* not saved */ }
+    }
+    $("settings").addEventListener("change", e => {
+      if (e.target.id === "lonInput") document.querySelector('input[name=basis][value=solar]').checked = true;
+      if (radioValue("basis") === "solar" && !Number.isFinite(parseFloat($("lonInput").value))) {
+        $("lonInput").focus();
+        return; // wait for a longitude; the chart stays on clock time until then
+      }
+      storeOpts();
+      cast();
+    });
+
     /* ----- Summary strip ----- */
     function renderMeta(c) {
       const pillar = (key, label) => {
@@ -802,8 +1079,9 @@
           ${pillar("year", "Year")}${pillar("month", "Month")}${pillar("day", "Day")}${pillar("hour", "Hour")}
         </div>
         <div>
-          <div class="han-line">${c.term.han}${YUAN[c.yuan].han}　${dun}${NUM_HAN[c.ju]}局</div>
-          <p>${c.term.en}, ${YUAN[c.yuan].en} yuan. ${c.yang ? "Yang" : "Yin"} escapement, ju ${c.ju}.</p>
+          <div class="han-line">${c.leap ? "閏" : ""}${c.term.han}${YUAN[c.yuan].han}　${dun}${NUM_HAN[c.ju]}局</div>
+          <p>${c.leap ? "Repeated " : ""}${c.term.en}, ${YUAN[c.yuan].en} yuan. ${c.yang ? "Yang" : "Yin"} escapement, ju ${c.ju}.
+          ${c.method === "zhirun" ? "Zhi run" : "Chai bu"} method, ${c.basis === "solar" ? `true solar time at ${c.longitude}°` : "clock time"}${c.basis === "solar" ? ` (${String(c.wall.h).padStart(2, "0")}:${String(c.wall.mi).padStart(2, "0")})` : ""}.</p>
         </div>
         <div>
           <div class="han-line">值符${STARS[c.dutyStar].han}　值使${DOORS[c.dutyDoor].han}門</div>
@@ -814,7 +1092,8 @@
     /* ----- Board ----- */
     function palaceFlags(cell) {
       const chips = cell.flags.map(f => `<span class="flag f-${f}" title="${FLAG_INFO[f].en}">${FLAG_INFO[f].han}</span>`);
-      cell.patterns.forEach(pt => chips.push(`<span class="flag ${pt.score > 0 ? "f-pattern-good" : "f-pattern-bad"}" title="${pt.en}">格</span>`));
+      // Every palace has a formation; only the favorable ones are marked on the board
+      cell.patterns.filter(pt => pt.score > 0).forEach(pt => chips.push(`<span class="flag f-pattern-good" title="${pt.en}">格</span>`));
       return chips.join("");
     }
 
@@ -893,7 +1172,7 @@
       if (reduceMotion()) return;
       const els = [...document.querySelectorAll("#grid .scr")].map(el => ({
         el, final: el.textContent,
-        settle: 260 + Number(el.closest(".palace").dataset.order) * 55
+        settle: 180 + Number(el.closest(".palace").dataset.order) * 27   // all settled by about 400 ms
       }));
       const t0 = performance.now();
       const tick = () => {
@@ -930,7 +1209,19 @@
       if (mCell.flags.includes("void")) notes.push([chip("f-void", "空"), "The matter's palace is void this hour. It may stall or come to nothing until the void is filled."]);
       if (c.youP !== c.matterP && yCell.flags.includes("void")) notes.push([chip("f-void", "空"), "Your own palace is void. You may lack the means or the will to follow through right now."]);
       if (mCell.flags.includes("horse")) notes.push([chip("f-horse", "馬"), "The Travelling Horse sits with the matter, so expect it to move quickly."]);
-      if (mCell.flags.includes("clash")) notes.push([chip("f-clash", "沖"), "The hour clashes the matter's palace. Expect a sudden change or reversal."]);
+      mCell.clashes.forEach(cl => notes.push([chip("f-clash", "沖"), cl.kind === "branch"
+        ? "The hour clashes the matter's palace. Expect a sudden change or reversal."
+        : `${cl.text} Latent friction runs through the matter itself.`]));
+      const r = c.relations;
+      const PUNISH = {
+        mutual: "Zi and Mao punish each other (the punishment of rudeness)",
+        ungrateful: "the day and hour branches form part of the Yin–Si–Shen punishment (ingratitude)",
+        bullying: "the day and hour branches form part of the Chou–Xu–Wei punishment (bullying)",
+        self: "the day and hour share a self-punishing branch"
+      };
+      if (r.branchClash) notes.push([chip("f-clash", "沖"), `The day branch ${BRANCH_HAN[c.pillars.day[1]]} clashes the hour branch ${BRANCH_HAN[c.pillars.hour[1]]}: you and the moment pull in opposite directions.`]);
+      if (r.punish) notes.push([chip("f-strike", "刑"), `Day and hour punish each other: ${PUNISH[r.punish]}. Watch for legal exposure or friction of your own making.`]);
+      if (r.stemClash) notes.push([chip("f-clash", "沖"), `The day stem ${STEM_HAN[c.pillars.day[0]]} clashes the hour stem ${STEM_HAN[c.pillars.hour[0]]}: open conflict between you and the matter.`]);
       if (mCell.flags.includes("strike")) notes.push([chip("f-strike", "刑"), "A strike-punishment falls on the matter's palace, bringing friction and setbacks."]);
       if (mCell.flags.includes("pressure")) notes.push([chip("f-pressure", "迫"), `The ${door.en.toLowerCase()} door is pressed in this palace, so it works poorly here.`]);
       mCell.patterns.forEach(pt => notes.push([chip(pt.score > 0 ? "f-pattern-good" : "f-pattern-bad", "格"), `${pt.han}, ${pt.en}, forms in the matter's palace. ${pt.text}`]));
@@ -959,13 +1250,14 @@
           <div><span class="flag f-clash">沖</span> Clash</div>
           <div><span class="flag f-strike">刑</span> Strike</div>
           <div><span class="flag f-pressure">迫</span> Pressed door</div>
-          <div><span class="flag f-pattern-good">格</span> Stem pattern</div>
+          <div><span class="flag f-pattern-good">格</span> Favorable formation</div>
         </div>
         <div class="save-row">
           <button class="btn quiet" id="saveBtn" type="button" ${saved ? "disabled" : ""}>${saved ? "Saved to journal" : "Save to journal"}</button>
-          <span>${saved ? "" : "Come back later to record how it turned out."}</span>
+          <button class="btn quiet" id="printBtn" type="button">Print or save as PDF</button>
         </div>`;
       $("saveBtn").addEventListener("click", saveCurrent);
+      $("printBtn").addEventListener("click", () => { buildBrief(); window.print(); });
     }
 
     /* ----- Palace drawer ----- */
@@ -1018,7 +1310,13 @@
           ${STRIKE[s] === n ? `<p class="d-warn">${STEM_PY[s]} is struck and punished in this palace.</p>` : ""}</div></section>`;
       }).join("");
 
-      const flagPart = cell.flags.filter(f => f !== "pressure" && f !== "strike").map(f => `
+      const clashPart = cell.clashes.map(cl => `
+        <section class="d-part"><div class="d-han tone-bad">沖</div>
+          <div><h3>${cl.kind === "branch" ? "Branch clash" : "Stem clash"}</h3><p>${cl.text} ${cl.kind === "branch"
+            ? "Expect disturbance, reversal or sudden change here."
+            : "Heaven and earth pull against each other, so friction is built into this palace."}</p></div></section>`).join("");
+
+      const flagPart = clashPart + cell.flags.filter(f => !["pressure", "strike", "clash"].includes(f)).map(f => `
         <section class="d-part"><div class="d-han">${FLAG_INFO[f].han}</div>
           <div><h3>${FLAG_INFO[f].en}</h3><p>${FLAG_INFO[f].text}</p></div></section>`).join("");
 
@@ -1066,7 +1364,7 @@
       if (!timeEdited || !$("timeInput").value) $("timeInput").value = toLocalInput(new Date());
       const date = new Date($("timeInput").value);
       if (isNaN(date)) return;
-      const chart = castChart(date);
+      const chart = castChart(date, readOpts());
       const rel = evaluateRelationship(PALACES[chart.youP].el, PALACES[chart.matterP].el);
       current = { chart, query, rel };
       renderMeta(chart);
@@ -1106,7 +1404,11 @@
         question: query,
         verdict: rel.headline,
         tone: rel.tone,
-        chart: `${chart.term.han}${YUAN[chart.yuan].han} ${chart.yang ? "陽" : "陰"}遁${NUM_HAN[chart.ju]}局, ${gzHan(chart.pillars.day)}日 ${gzHan(chart.pillars.hour)}時`,
+        chart: `${chart.leap ? "閏" : ""}${chart.term.han}${YUAN[chart.yuan].han} ${chart.yang ? "陽" : "陰"}遁${NUM_HAN[chart.ju]}局, ${gzHan(chart.pillars.day)}日 ${gzHan(chart.pillars.hour)}時`,
+        youPalace: PALACES[chart.youP].name,
+        matterPalace: PALACES[chart.matterP].name,
+        matterDoor: DOORS[chart.pal[chart.matterP].door].en,
+        settings: { method: chart.method, basis: chart.basis, longitude: chart.basis === "solar" ? chart.longitude : null, horseFrom: chart.horseFrom },
         outcome: "",
         notes: ""
       });
@@ -1131,6 +1433,7 @@
         return `<li class="j-item" data-id="${esc(e.id)}">
           <div class="j-top"><time datetime="${esc(e.at)}">${esc(when)}　${esc(e.chart || "")}</time><span class="j-verdict ${esc(e.tone || "")}">${esc(e.verdict || "")}</span></div>
           <p class="j-q">“${esc(e.question)}”</p>
+          ${e.youPalace ? `<p class="j-pal">You in ${esc(e.youPalace)}, the matter in ${esc(e.matterPalace)}${e.matterDoor ? ` with the ${esc(e.matterDoor.toLowerCase())} door` : ""}.</p>` : ""}
           <div class="j-controls">
             <label>Outcome <select data-act="outcome">${OUTCOMES.map(([v, t]) => `<option value="${v}" ${e.outcome === v ? "selected" : ""}>${t}</option>`).join("")}</select></label>
             <button class="link" type="button" data-act="open">Open chart</button>
@@ -1162,6 +1465,13 @@
         $("queryInput").value = entry.question;
         $("timeInput").value = entry.at;
         timeEdited = true;
+        if (entry.settings) {
+          const s = entry.settings;
+          const setRadio = (name, v) => { const el = document.querySelector(`input[name=${name}][value="${v}"]`); if (el) el.checked = true; };
+          setRadio("method", s.method); setRadio("basis", s.basis); setRadio("horse", s.horseFrom);
+          if (Number.isFinite(s.longitude)) $("lonInput").value = s.longitude;
+          storeOpts();
+        }
         cast();
         window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" });
       } else if (act === "delete") {
@@ -1202,6 +1512,64 @@
       }
     });
 
+    /* ----- Printed brief (one monochrome page) ----- */
+    function buildBrief() {
+      if (!current) return;
+      const { chart: c, query, rel } = current;
+      const you = PALACES[c.youP], matter = PALACES[c.matterP];
+      const when = c.date.toLocaleString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+      const relText = rel.flow === "you-matter"
+        ? `${EL_HAN[you.el]} ${rel.verb} ${EL_HAN[matter.el]}`
+        : `${EL_HAN[matter.el]} ${rel.verb} ${EL_HAN[you.el]}`;
+      const relEn = rel.flow === "you-matter"
+        ? `You (${you.name}, ${you.el.toLowerCase()}) ${rel.verbCap} the matter (${matter.name}, ${matter.el.toLowerCase()}).`
+        : `The matter (${matter.name}, ${matter.el.toLowerCase()}) ${rel.verbCap} you (${you.name}, ${you.el.toLowerCase()}).`;
+
+      const cellHtml = n => {
+        if (n === 5) return `<td><div class="b-pal">中 Center</div><p>Earth stem ${STEM_HAN[c.earth5]}, travelling with Tian Rui.</p></td>`;
+        const cell = c.pal[n], info = PALACES[n], door = DOORS[cell.door];
+        const roles = (n === c.youP ? `<span class="b-role">我</span>` : "") + (n === c.matterP ? `<span class="b-role">事</span>` : "");
+        const marks = cell.flags.map(f => FLAG_INFO[f].en).concat(cell.patterns.map(pt => pt.en));
+        return `<td>${roles}<div class="b-pal">${info.tri} ${info.name}, ${info.dir}</div>
+          <div><span class="b-door">${door.han}</span> ${door.en} door</div>
+          <div><span class="b-han">${cell.stars.map(k => STARS[k].han).join(" ")}</span> ${cell.stars.map(k => STARS[k].en).join(", ")}</div>
+          <div><span class="b-han">${DEITIES[cell.deity].han}</span> ${DEITIES[cell.deity].en}</div>
+          <div><span class="b-han">${cell.heaven.map(s => STEM_HAN[s]).join("")}／${STEM_HAN[cell.earth]}</span></div>
+          ${marks.length ? `<div class="b-marks">${marks.join(", ")}</div>` : ""}</td>`;
+      };
+      const rows = [0, 3, 6].map(i => `<tr>${GRID_ORDER.slice(i, i + 3).map(cellHtml).join("")}</tr>`).join("");
+      const notes = [...document.querySelectorAll("#reading .notes li > span:last-child")].map(s => `<li>${esc(s.textContent)}</li>`).join("");
+      const mCell = c.pal[c.matterP];
+      const entry = journal.find(e => e.at === toLocalInput(c.date) && e.question === query);
+      const outcome = entry && entry.outcome ? OUTCOMES.find(o => o[0] === entry.outcome)[1] : null;
+
+      $("brief").innerHTML = `
+        <header>
+          <div><h1>Qimen chart brief</h1><div>${esc(when)}</div></div>
+          <div class="b-mark">奇門</div>
+        </header>
+        <p class="b-q">“${esc(query)}”</p>
+        <div class="b-meta">
+          <span><b>${gzHan(c.pillars.year)}</b> year</span>
+          <span><b>${gzHan(c.pillars.month)}</b> month</span>
+          <span><b>${gzHan(c.pillars.day)}</b> day</span>
+          <span><b>${gzHan(c.pillars.hour)}</b> hour</span>
+          <span><b>${c.leap ? "閏" : ""}${c.term.han}${YUAN[c.yuan].han} ${c.yang ? "陽" : "陰"}遁${NUM_HAN[c.ju]}局</b>
+            ${c.leap ? "Repeated " : ""}${c.term.en}, ${YUAN[c.yuan].en} yuan, ${c.yang ? "yang" : "yin"} ju ${c.ju}. Duty star ${STARS[c.dutyStar].en}, duty door ${DOORS[c.dutyDoor].en}. Void ${c.voidBranches.map(b => BRANCH_HAN[b]).join("")}.</span>
+        </div>
+        <div class="b-verdict"><span class="b-rel">${relText}</span><strong>${rel.headline}</strong><span>${rel.action}. ${relEn}</span></div>
+        <table aria-label="Nine palace chart, south at top">${rows}</table>
+        <h2>Reading</h2>
+        <p>${rel.summary}</p>
+        <p>The matter carries the ${DOORS[mCell.door].en.toLowerCase()} door with the ${DEITIES[mCell.deity].en} deity. ${DOORS[mCell.door].text}</p>
+        ${notes ? `<ul>${notes}</ul>` : ""}
+        ${entry ? `<h2>Journal</h2><p>${outcome ? `Outcome: ${outcome}. ` : "Outcome not yet recorded. "}${entry.notes ? esc(entry.notes) : ""}</p>` : ""}
+        <div class="b-foot">我 marks your palace (day stem ${STEM_HAN[c.dayUses]}), 事 the matter's palace (hour stem ${STEM_HAN[c.hourUses]}). South is at the top.
+          ${c.method === "zhirun" ? "Zhi run" : "Chai bu"} method, ${c.basis === "solar" ? `true solar time at ${c.longitude}°` : "clock time"}, Horse from the ${c.horseFrom} branch. Rotating-plate hour chart.</div>`;
+    }
+    window.addEventListener("beforeprint", buildBrief);
+
+    restoreOpts();
     renderJournal();
     if (!storageOk) $("jStatus").textContent = "This browser isn't allowing the page to save. Use Export to keep a copy.";
     cast();
